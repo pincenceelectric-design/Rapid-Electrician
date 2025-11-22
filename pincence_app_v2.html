@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Pincence Electric – Service Request</title>
+  <style>
+    :root {
+      --pe-blue: #1d4ed8;     /* primary royal blue */
+      --pe-blue-dark: #1e3a8a;/* deeper blue */
+      --pe-bg: #020617;       /* outer background */
+      --pe-gray: #e5e7eb;
+      --pe-accent-red: #ef4444;
+    }
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background: radial-gradient(circle at top, var(--pe-blue) 0, var(--pe-bg) 60%);
+      margin: 0;
+      padding: 24px;
+      color: #0f172a;
+    }
+    .card {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #f9fafb;
+      border-radius: 18px;
+      padding: 0 24px 26px;
+      box-shadow: 0 22px 55px rgba(15, 23, 42, 0.45);
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      overflow: hidden;
+    }
+    .card-header {
+      margin: -1px -24px 18px;
+      padding: 16px 24px 18px;
+      background: linear-gradient(120deg, var(--pe-blue-dark) 0%, var(--pe-blue) 55%, var(--pe-accent-red) 100%);
+      color: #e5e7eb;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      position: relative;
+    }
+    .card-header::after {
+      content: "";
+      position: absolute;
+      right: -35px;
+      top: -40px;
+      width: 120px;
+      height: 120px;
+      border-radius: 999px;
+      border: 3px solid rgba(248, 250, 252, 0.08);
+    }
+    .logo-wrap {
+  flex-shrink: 0;
+  width: 80px;           /* a bit bigger so the round logo reads clean */
+  height: 80px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(248, 250, 252, 0.4);
+  overflow: hidden;
+}
+
+.logo-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* keep proportions, no cropping */
+  object-position: center;
+  display: block;
+}
+    .header-text h1 {
+      margin: 0;
+      font-size: 20px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .header-text p {
+      margin: 4px 0 0;
+      font-size: 12px;
+      color: #dbeafe;
+    }
+    .help {
+      margin: 4px 0 14px;
+      font-size: 12px;
+      color: #475569;
+    }
+    h2.section-title {
+      margin: 8px 0 4px;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #64748b;
+    }
+    label {
+      display: block;
+      margin-top: 9px;
+      font-size: 12px;
+      color: #334155;
+      font-weight: 600;
+    }
+    input, select, textarea {
+      width: 100%;
+      margin-top: 4px;
+      padding: 7px 9px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font-size: 13px;
+      background: #ffffff;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: 2px solid rgba(59, 130, 246, 0.45);
+      border-color: #60a5fa;
+    }
+    textarea {
+      min-height: 70px;
+      resize: vertical;
+    }
+    .row {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+    .add-row {
+      display: grid;
+      grid-template-columns: 1.3fr 2fr 0.6fr 0.9fr 0.9fr;
+      gap: 8px;
+      align-items: end;
+      margin-top: 4px;
+    }
+    .add-row select {
+      font-size: 12px;
+    }
+    .add-row button {
+      margin-top: 0;
+      width: 100%;
+    }
+    .small-label {
+      font-size: 11px;
+      font-weight: 500;
+      color: #64748b;
+    }
+    .service-list {
+      margin-top: 10px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      padding: 8px 10px;
+      max-height: 240px;
+      overflow-y: auto;
+    }
+    .service-list-empty {
+      font-size: 12px;
+      color: #94a3b8;
+      font-style: italic;
+      padding: 4px 2px;
+    }
+    table.srv-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+    }
+    .srv-table th,
+    .srv-table td {
+      padding: 4px 6px;
+      border-bottom: 1px solid #e2e8f0;
+      text-align: left;
+      vertical-align: middle;
+    }
+    .srv-table th {
+      font-size: 11px;
+      font-weight: 700;
+      color: #64748b;
+      background: #eff6ff;
+    }
+    .srv-table td:last-child {
+      text-align: right;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 2px 7px;
+      border-radius: 999px;
+      font-size: 10px;
+      font-weight: 600;
+      background: #dbeafe;
+      color: #1d4ed8;
+    }
+    .chip.emergency {
+      background: #fee2e2;
+      color: #b91c1c;
+    }
+    .chip.tbd {
+      background: #e5e7eb;
+      color: #4b5563;
+    }
+    .total {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: var(--pe-blue-dark);
+      color: #f9fafb;
+      font-weight: 600;
+      transition: background-color 0.15s, color 0.15s;
+    }
+    .total span:first-child {
+      font-size: 13px;
+      opacity: 0.9;
+    }
+    .total span:last-child {
+      font-size: 18px;
+    }
+    .total.missing-zip {
+      background: #7f1d1d;
+      color: #fee2e2;
+    }
+    .total.missing-zip span:first-child {
+      opacity: 1;
+    }
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 16px;
+    }
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 9px 20px;
+      font-size: 13px;
+      font-weight: 700;
+      cursor: pointer;
+      background: var(--pe-blue);
+      color: #e5e7eb;
+      box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    .footer-bar {
+      margin-top: 16px;
+      font-size: 11px;
+      text-align: center;
+      color: #64748b;
+    }
+    small.note {
+      display: block;
+      margin-top: 4px;
+      font-size: 11px;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="card-header">
+      <div class="logo-wrap">
+  <img 
+    src="pincence_logo.png"
+    alt="Pincence Electric Logo"
+  />
+</div>
+      <div class="header-text">
+        <h1>Pincence Electric</h1>
+        <p>Request Electrical Service & Ballpark Pricing</p>
+      </div>
+    </div>
+
+    <p class="help">
+      Use this form to request service from Pincence Electric. Tell us about your project,
+      pick the services you’re interested in, and we’ll review the request, confirm details,
+      and follow up with you directly.
+    </p>
+
+    <!-- Customer details -->
+    <h2 class="section-title">Contact & Location</h2>
+    <div class="row">
+      <div>
+        <label>Your name</label>
+        <input id="name" placeholder="Jane Customer" />
+      </div>
+      <div>
+        <label>Phone <span style="color:red">*</span></label>
+        <input id="phone" placeholder="603-303-0691" />
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Email (optional)</label>
+        <input id="email" placeholder="you@email.com" />
+      </div>
+      <div>
+        <label>ZIP code (for travel band)</label>
+        <input id="zip" placeholder="e.g., 03826" />
+        <small class="note" id="zipNote">ZIP is required to calculate travel and show an estimated total.</small>
+      </div>
+    </div>
+    <label>Service address</label>
+    <input id="address" placeholder="15 Main St, Derry NH" />
+
+    <label>Short description of the work</label>
+    <input id="jobTag" placeholder="Lighting update, service change, troubleshooting, new construction…" />
+    <small class="note" id="jobIdDisplay"></small>
+
+    <!-- Service selection -->
+    <h2 class="section-title">Services You’re Interested In</h2>
+
+    <label>Photos (optional)</label>
+    <input id="photos" type="file" accept="image/*" multiple />
+    <small class="note">
+      You can attach a few photos of the panel, area of work, or existing conditions (up to 5).
+    </small>
+
+    <label class="small-label" style="margin-top:10px;">Add line items to your request</label>
+    <div class="add-row">
+      <div>
+        <label class="small-label">Category</label>
+        <select id="catSelect"></select>
+      </div>
+      <div>
+        <label class="small-label">Service</label>
+        <select id="svcSelect"></select>
+      </div>
+      <div>
+        <label class="small-label">Qty / Sq Ft / Hours</label>
+        <input id="qty" type="number" min="1" step="1" value="1" />
+      </div>
+      <div>
+        <label class="small-label">Emergency rate?</label>
+        <select id="lineEmergency">
+          <option value="no">No</option>
+          <option value="yes">Yes</option>
+        </select>
+      </div>
+      <div>
+        <button id="addLineBtn">Add to list</button>
+      </div>
+    </div>
+
+    <div class="service-list" id="serviceList">
+      <div class="service-list-empty">No services added yet. Select a category and service, set quantity, and click “Add to list”.</div>
+    </div>
+
+    <div class="total" id="totalBox">
+      <span>Estimated total (services + travel) – for budgeting only</span>
+      <span id="total">$0</span>
+    </div>
+    <small class="note" id="travelInfo">
+      Enter your ZIP to calculate an estimated travel band and total.
+    </small>
+
+    <h2 class="section-title">Notes for Our Team</h2>
+    <textarea id="notes" placeholder="Tell us about access, preferred schedule, existing issues, or anything else we should know."></textarea>
+
+    <div class="actions">
+      <button id="submitBtn">Submit Service Request</button>
+    </div>
+
+    <div class="footer-bar">
+      Pincence Electric • Licensed in NH / MA / ME • 603-303-0691 • Pincence.Electric@gmail.com
+    </div>
+  </div>
+
+  <!-- jsPDF CDN -->
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <script>
+    // ===== CONFIG – UPDATE BEFORE SHARING PUBLICLY =====
+    const OFFICE_EMAIL = "Pincence.Electric@gmail.com";
+    // Replace with your actual /exec URL from Apps Script:
+    const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxHVjBULjbH4uPQX3qPsvEEI9v80eRbkPvDGEQVKJwC7X4IECmO400M5IP07-y6BwnOSg/exec";
+
+    const RATE_HOURLY = 150;
+    const CATALOG = {
+      lighting: {
+        label: 'Devices & Lighting',
+        services: {
+          add_recept:   { name: 'Add Receptacle Outlet', unit: 'each', price: 185 },
+          dimmer:       { name: 'Dimmer Switch', unit: 'each', price: 175 },
+          recessed_first: { name: 'Recessed Fixture – First', unit: 'each', price: 225 },
+          recessed_addtl: { name: 'Recessed Fixture – Additional', unit: 'each', price: 125 },
+          minor_ltg_repairs: { name: 'Minor Lighting Repairs', unit: 'each', price: 185 },
+          ext_fixture_swap: { name: 'Exterior Fixture Swap', unit: 'each', price: 185 },
+          undercab:     { name: 'Under-Cabinet Lighting', unit: 'cabinet', price: 225 },
+          undercab_hidden: { name: 'Under-Cabinet Hidden Outlets', unit: 'cabinet', price: 350 },
+          other_ltg:    { name: 'Other (lighting) – describe in notes', unit: '', price: null }
+        }
+      },
+      main_power: {
+        label: 'Power & Distribution',
+        services: {
+          svc_upgrade_200: { name: 'Standard 100–200A Service Upgrade', unit: 'each', price: 3800 },
+          svc_upgrade_400: { name: '400A Service Upgrade (add-on)', unit: 'each', price: 4000 },
+          panel_upg:    { name: 'Panel Upgrade / Reconfiguration', unit: 'each', price: 750 },
+          surge_protector: { name: 'Surge Protector (Main Panel)', unit: 'each', price: 325 },
+          panel_maint:  { name: 'Main Panel Maintenance', unit: 'each', price: 250 },
+          monitor_kit:  { name: 'Panel & Circuit Monitor Kit Install', unit: 'each', price: 1800 },
+          afci:         { name: 'Arc-Fault Breaker Replacement', unit: 'each', price: 195 },
+          spa_panel:    { name: '50A Hot Tub / Spa Panel Install', unit: 'each', price: 1600 },
+          spa_wire:     { name: 'Hot Tub Wiring to Existing Spa Panel', unit: 'each', price: 750 },
+          subpanel_100: { name: '100A Sub-Panel Install', unit: 'each', price: 1200 },
+          ev_outlet:    { name: 'EV Charger Outlet (NEMA 14-50 or Hardwired)', unit: 'each', price: 1600 },
+          range_prep:   { name: '50A Range Power Prep', unit: 'each', price: 1200 },
+          hidden_cond:  { name: 'Hidden Conditions', unit: 'each', price: 250 },
+          other_mp:     { name: 'Other (main power) – describe in notes', unit: '', price: null }
+        }
+      },
+      generators: {
+        label: 'Generators & Backup Power',
+        services: {
+          gen_30:      { name: '30A Generator Inlet (125 ft, no conduit)', unit: 'each', price: 1200 },
+          gen_50:      { name: '50A Generator Inlet (125 ft, no conduit)', unit: 'each', price: 2100 },
+          gen_13kw:    { name: '13kW Standby Generator System (electrical only)', unit: 'each', price: 8000 },
+          gen_26kw:    { name: '26kW Standby Generator System (electrical only)', unit: 'each', price: 12000 },
+          other_gen:   { name: 'Other (generator) – describe in notes', unit: '', price: null }
+        }
+      },
+      specialty: {
+        label: 'Specialty & Other',
+        services: {
+          service_call: { name: 'Service Call (time on site)', unit: 'hour', price: RATE_HOURLY, hourly: true },
+          trouble_hour: { name: 'General Troubleshooting / Diagnostics', unit: 'hour', price: RATE_HOURLY, hourly: true },
+          bucket_truck: { name: 'Bucket Truck Time', unit: 'hour', price: RATE_HOURLY, hourly: true },
+          extra_hour:   { name: 'Additional Time On Site (per hour)', unit: 'hour', price: RATE_HOURLY, hourly: true },
+          condo_base:   { name: 'Condo / Multi-Unit Base Visit', unit: 'each', price: 385 },
+          baseboard:    { name: 'Baseboard Heater Feed (per unit)', unit: 'each', price: 450 },
+          minisplit:    { name: 'Mini-Split / Heat Pump Feed (per condenser)', unit: 'each', price: 1100 },
+          range_swap:   { name: 'Range / Cooktop Swap (existing circuit)', unit: 'each', price: 275 },
+          dryer_swap:   { name: 'Dryer Swap (existing circuit)', unit: 'each', price: 225 },
+          dw_gd_mw:     { name: 'Dishwasher / Disposal / Microwave Power', unit: 'each', price: 600 },
+          exterior_gfci: { name: 'Exterior GFCI', unit: 'each', price: 165 },
+          bath_fan:     { name: 'Bath Fan Swap', unit: 'each', price: 650 },
+          new_const_min: { name: 'New Construction Wiring – Minimum Code', unit: 'sqft', price: 9.5 },
+          new_const_mid: { name: 'New Construction Wiring – Mid Level', unit: 'sqft', price: 10.5 },
+          new_const_elite: { name: 'New Construction Wiring – Elite', unit: 'sqft', price: 12.0 },
+          caseta:       { name: 'Lutron Caseta Intro System', unit: 'each', price: 1500 },
+          thermography: { name: 'Infrared Thermography', unit: 'hour', price: 150 },
+          as_builts:    { name: 'As-Builts / Labeling', unit: 'each', price: 125 },
+          site_survey:  { name: 'Site Survey & Maintenance Plan Dev', unit: 'hour', price: 150 },
+          outage_coord: { name: 'Outage Coordination', unit: 'each', price: 250 },
+          standby:      { name: 'Inspection Standby', unit: 'each', price: 225 },
+          mobilization: { name: 'Extra Mobilization', unit: 'each', price: 225 },
+          emergency:    { name: 'After-Hours / Emergency Call', unit: 'each', price: 275 },
+          condenser_30: { name: '30A Condenser Feed (Residential)', unit: 'each', price: 1100 },
+          condenser_40: { name: '40A Condenser Feed (Residential)', unit: 'each', price: 1375 },
+          condenser_50: { name: '50A Condenser Feed (Residential)', unit: 'each', price: 1475 },
+          other_sp:     { name: 'Other (specialty) – describe in notes', unit: '', price: null }
+        }
+      }
+    };
+
+    const lineItems = [];
+    const el = id => document.getElementById(id);
+
+    function travelFeeFromZip(zip) {
+      zip = (zip || '').toString().trim();
+      if (!/^[0-9]{5}$/.test(zip)) return NaN;
+
+      const band0_15 = [
+        '03826','03819','03841','03859','03865','03848','03811','03858','03873','03073',
+        '01860','01832','03827','01830','03044','01831','03038','03079','03833','03036',
+        '03041','01913','01835','01985','03077','03087','01834','01844','03042','01842',
+        '01840','01885','01841','03844','03874','03040','03856','01952','01833','01950',
+        '03032','01922','03843','01843','03053','03076','03885','03842','01845'
+      ];
+
+      const band15_30 = [
+        '03826','03819','03841','03859','03865','03848','03811','03858','03873','03073',
+        '01860','01832','03827','01830','03044','01831','03038','03079','03833','03036',
+        '03041','01913','01835','01985','03077','03087','01834','01844','03042','01842',
+        '01840','01885','01841','03844','03874','03040','03856','01952','01833','01950',
+        '03032','01922','03843','01843','03053','03076','03885','03842','01845','01921',
+        '01826','03079','03038','03032','01950','01922','01879','01827','01810','01867',
+        '01876','01901','01907','01908','01862','01821','01887','01851','01852','01854',
+        '01824','01863','01826','01850','01862','03801','03802','03803','03804','03805',
+        '03820','03821','03822','03823','03824','03825','03835','03261','03290','03823',
+        '03054','03051','03052','03062','03063','03064','03060','03061','03048','03101',
+        '03102','03103','03104','03105','03108','03109','03111','03275','03237','03216'
+      ];
+
+      const band30_50 = [
+        '03826','03819','03841','03859','03865','03848','03811','03858','03873','03073',
+        '01860','01832','03827','01830','03044','01831','03038','03079','03833','03036',
+        '03041','01913','01835','01985','03077','03087','01834','01844','03042','01842',
+        '01840','01885','01841','03844','03874','03040','03856','01952','01833','01950',
+        '03032','01922','03843','01843','03053','03076','03885','03842','01845','01921',
+        '01826','03079','03038','03032','01950','01922','01879','01827','01810','01867',
+        '01876','01901','01907','01908','01862','01821','01887','01851','01852','01854',
+        '01824','01863','01826','01850','01862','03801','03802','03803','03804','03805',
+        '03820','03821','03822','03823','03824','03825','03835','03261','03290','03823',
+        '03054','03051','03052','03062','03063','03064','03060','03061','03048','03101',
+        '03102','03103','03104','03105','03108','03109','03111','03275','03237','03216',
+        '03258','03867','03801','03055','03839','03801','03220','03110','03106','03235',
+        '03268','03229','03301','03302','03303','03242','03257','03276','03278','03049',
+        '03109','03840','03841','03030','03031','03064','03047','03043','03045','03046',
+        '03047','03049','03051','03052','03053','03054','03055','03057','03060','03061',
+        '03062','03063','03064','03070','03071','03082','03084','03086','03263','03431'
+      ];
+
+      if (band0_15.includes(zip)) return 0;
+      if (band15_30.includes(zip)) return 150;
+      if (band30_50.includes(zip)) return 250;
+      return NaN;
+    }
+
+    function travelBandLabel(fee) {
+      if (fee === 0) return '0–15 miles (no travel adder)';
+      if (fee === 150) return '15–30 miles';
+      if (fee === 250) return '30–50+ miles';
+      return 'Outside standard travel radius (TBD)';
+    }
+
+    function populateCategorySelect() {
+      const catSel = el('catSelect');
+      catSel.innerHTML = '';
+      Object.entries(CATALOG).forEach(([key, cat]) => {
+        const opt = document.createElement('option');
+        opt.value = key;
+        opt.textContent = cat.label;
+        catSel.appendChild(opt);
+      });
+    }
+
+    function populateServiceSelect() {
+      const catKey = el('catSelect').value;
+      const svcSel = el('svcSelect');
+      svcSel.innerHTML = '';
+      if (!catKey || !CATALOG[catKey]) return;
+      const placeholder = document.createElement('option');
+      placeholder.value = '';
+      placeholder.textContent = 'Select a service…';
+      svcSel.appendChild(placeholder);
+      Object.entries(CATALOG[catKey].services).forEach(([sk, svc]) => {
+        const opt = document.createElement('option');
+        opt.value = sk;
+        let label = svc.name;
+        if (svc.price === null) label += ' — TBD / consult';
+        else if (svc.hourly) label += ` — ${svc.unit || 'hour'} @ $${RATE_HOURLY}/hr`;
+        else label += ` — $${svc.price} per ${svc.unit || 'job'}`;
+        opt.textContent = label;
+        svcSel.appendChild(opt);
+      });
+    }
+
+    function addLineItem() {
+      const catKey = el('catSelect').value;
+      const svcKey = el('svcSelect').value;
+      const qtyVal = Number(el('qty').value || 1);
+      const emerg = el('lineEmergency').value === 'yes';
+
+      if (!catKey || !svcKey || !CATALOG[catKey] || !CATALOG[catKey].services[svcKey]) {
+        alert('Select a category and service before adding.');
+        return;
+      }
+      if (qtyVal <= 0 || isNaN(qtyVal)) {
+        alert('Quantity must be at least 1.');
+        return;
+      }
+
+      const svc = CATALOG[catKey].services[svcKey];
+      let unitPrice = svc.price;
+      let lineTotal = NaN;
+
+      if (svc.hourly) {
+        unitPrice = RATE_HOURLY;
+        lineTotal = Math.max(1, qtyVal) * RATE_HOURLY * (emerg ? 1.5 : 1);
+      } else if (svc.price === null) {
+        unitPrice = null;
+        lineTotal = NaN;
+      } else {
+        lineTotal = Math.max(1, qtyVal) * svc.price;
+      }
+
+      lineItems.push({
+        catKey,
+        svcKey,
+        qty: Math.max(1, qtyVal),
+        emerg,
+        unitPrice,
+        lineTotal
+      });
+
+      renderServiceList();
+      recalcTotal();
+    }
+
+    function removeLineItem(index) {
+      lineItems.splice(index, 1);
+      renderServiceList();
+      recalcTotal();
+    }
+
+    function renderServiceList() {
+      const container = el('serviceList');
+      container.innerHTML = '';
+      if (!lineItems.length) {
+        const div = document.createElement('div');
+        div.className = 'service-list-empty';
+        div.textContent = 'No services added yet. Select a category and service, set quantity, and click “Add to list”.';
+        container.appendChild(div);
+        return;
+      }
+
+      const table = document.createElement('table');
+      table.className = 'srv-table';
+      const thead = document.createElement('thead');
+      thead.innerHTML = `
+        <tr>
+          <th>Category</th>
+          <th>Service</th>
+          <th>Qty</th>
+          <th>Unit</th>
+          <th>Line total</th>
+          <th></th>
+        </tr>`;
+      table.appendChild(thead);
+
+      const tbody = document.createElement('tbody');
+      lineItems.forEach((item, idx) => {
+        const cat = CATALOG[item.catKey];
+        const svc = cat.services[item.svcKey];
+        const tr = document.createElement('tr');
+
+        const catTd = document.createElement('td');
+        catTd.textContent = cat.label;
+
+        const svcTd = document.createElement('td');
+        svcTd.textContent = svc.name;
+        if (item.emerg) {
+          const chip = document.createElement('span');
+          chip.className = 'chip emergency';
+          chip.textContent = 'Emergency rate';
+          svcTd.appendChild(document.createElement('br'));
+          svcTd.appendChild(chip);
+        }
+        if (svc.price === null) {
+          const chip = document.createElement('span');
+          chip.className = 'chip tbd';
+          chip.textContent = 'Specialty item – requires consult';
+          svcTd.appendChild(document.createElement('br'));
+          svcTd.appendChild(chip);
+        }
+
+        const qtyTd = document.createElement('td');
+        qtyTd.textContent = item.qty;
+
+        const unitTd = document.createElement('td');
+        unitTd.textContent = svc.unit || (svc.hourly ? 'hour' : 'job');
+
+        const totalTd = document.createElement('td');
+        if (isNaN(item.lineTotal)) {
+          totalTd.textContent = 'TBD';
+          totalTd.style.color = '#64748b';
+          totalTd.style.fontStyle = 'italic';
+        } else {
+          totalTd.textContent = '$' + (Math.round(item.lineTotal * 100) / 100).toLocaleString();
+        }
+
+        const actionTd = document.createElement('td');
+        actionTd.style.textAlign = 'right';
+        const btn = document.createElement('button');
+        btn.style.boxShadow = 'none';
+        btn.style.background = '#fee2e2';
+        btn.style.color = '#b91c1c';
+        btn.style.fontSize = '11px';
+        btn.style.padding = '4px 9px';
+        btn.textContent = 'Remove';
+        btn.onclick = () => removeLineItem(idx);
+        actionTd.appendChild(btn);
+
+        tr.appendChild(catTd);
+        tr.appendChild(svcTd);
+        tr.appendChild(qtyTd);
+        tr.appendChild(unitTd);
+        tr.appendChild(totalTd);
+        tr.appendChild(actionTd);
+
+        tbody.appendChild(tr);
+      });
+
+      table.appendChild(tbody);
+      container.appendChild(table);
+    }
+
+    function recalcTotal() {
+      const zip = el('zip').value.trim();
+      const travelFee = travelFeeFromZip(zip);
+      const totalBox = el('totalBox');
+      const travelInfo = el('travelInfo');
+
+      let subTotal = 0;
+      lineItems.forEach(item => {
+        if (!isNaN(item.lineTotal)) {
+          subTotal += item.lineTotal;
+        }
+      });
+
+      if (!lineItems.length) {
+        el('total').textContent = '$0';
+        totalBox.classList.remove('missing-zip');
+        travelInfo.textContent = 'Enter your ZIP to calculate an estimated travel band and total.';
+        return;
+      }
+
+      if (!zip || isNaN(travelFee)) {
+        el('total').textContent = 'ZIP required';
+        totalBox.classList.add('missing-zip');
+        travelInfo.textContent = 'ZIP missing or outside our standard radius – final pricing will be confirmed by our office.';
+        return;
+      }
+
+      totalBox.classList.remove('missing-zip');
+      const total = subTotal + travelFee;
+      el('total').textContent = '$' + (Math.round(total * 100) / 100).toLocaleString();
+      travelInfo.textContent = 'Travel band: ' + travelBandLabel(travelFee) + ` • Travel portion included in total: $${travelFee}`;
+    }
+
+    function generateJobId() {
+      const now = new Date();
+      const yyyy = now.getFullYear();
+      const mm = String(now.getMonth() + 1).padStart(2, '0');
+      const dd = String(now.getDate()).padStart(2, '0');
+      const datePart = `${yyyy}${mm}${dd}`;
+      const addr = el('address').value.trim() || 'Unknown address';
+      const shortAddr = addr.split(',')[0];
+      const desc = el('jobTag').value.trim() || 'General scope';
+      return `PRONH${datePart} ${shortAddr} (${desc})`;
+    }
+
+    function updateJobIdDisplay() {
+      const jobId = generateJobId();
+      el('jobIdDisplay').textContent = 'Your request reference ID: ' + jobId;
+    }
+
+    function buildSummary() {
+      const zip = el('zip').value.trim();
+      const travelFee = travelFeeFromZip(zip);
+      const jobId = generateJobId();
+
+      let subTotal = 0;
+      let anyTbd = false;
+      const lines = [];
+
+      lines.push('Job ID: ' + jobId);
+      lines.push('Date: ' + new Date().toLocaleString());
+      lines.push('');
+      lines.push('Customer: ' + el('name').value);
+      lines.push('Phone: ' + el('phone').value);
+      lines.push('Email: ' + el('email').value);
+      lines.push('Service Address: ' + el('address').value);
+      lines.push('ZIP: ' + zip);
+      lines.push('');
+
+      lines.push('REQUESTED SERVICES:');
+      if (!lineItems.length) {
+        lines.push('  (none added)');
+      } else {
+        lineItems.forEach((item, idx) => {
+          const cat = CATALOG[item.catKey];
+          const svc = cat.services[item.svcKey];
+          let lineText = `  ${idx + 1}. [${cat.label}] ${svc.name} — Qty ${item.qty}`;
+          if (isNaN(item.lineTotal)) {
+            lineText += ' — TBD (specialty item – requires consult)';
+            anyTbd = true;
+          } else {
+            subTotal += item.lineTotal;
+            lineText += ' — $' + (Math.round(item.lineTotal * 100) / 100).toLocaleString();
+          }
+          if (item.emerg) lineText += ' (Emergency rate)';
+          lines.push(lineText);
+        });
+      }
+      lines.push('');
+
+      let travelText = 'Travel estimate: ';
+      if (!zip || isNaN(travelFee)) {
+        travelText += 'ZIP missing/invalid or outside radius (travel TBD)';
+        anyTbd = true;
+      } else {
+        travelText += '$' + travelFee + ' — ' + travelBandLabel(travelFee);
+      }
+      lines.push(travelText);
+
+      let totalText = 'Estimated Total (for budgeting only): ';
+      if (anyTbd || !zip || isNaN(travelFee)) {
+        totalText += 'TBD';
+      } else {
+        const total = subTotal + travelFee;
+        totalText += '$' + (Math.round(total * 100) / 100).toLocaleString();
+      }
+      lines.push(totalText);
+      lines.push('');
+      lines.push('Customer notes: ' + el('notes').value);
+      lines.push('');
+      lines.push('Pincence Electric • Licensed in NH / MA / ME • 603-303-0691 • Pincence.Electric@gmail.com');
+
+      return lines.join('\n');
+    }
+
+    async function filesToBase64(fileList) {
+      const maxFiles = 5;
+      const tasks = [...fileList].slice(0, maxFiles).map(file => new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve({
+          name: file.name,
+          type: file.type,
+          base64: reader.result.split(',')[1]
+        });
+        reader.readAsDataURL(file);
+      }));
+      return Promise.all(tasks);
+    }
+
+    function generatePdfBlob() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      doc.setFillColor(29, 78, 216);
+      doc.rect(0, 0, 210, 24, 'F');
+      doc.setTextColor(249, 250, 251);
+      doc.setFontSize(16);
+      doc.text('PINCENCE ELECTRIC', 14, 14);
+      doc.setFontSize(9);
+      doc.text('Licensed in NH / MA / ME • 603-303-0691 • Pincence.Electric@gmail.com', 14, 20);
+
+      doc.setTextColor(15, 23, 42);
+      const lines = buildSummary().split('\n');
+      doc.setFontSize(11);
+      let y = 32;
+      lines.forEach(l => {
+        if (y > 270) {
+          doc.addPage();
+          y = 20;
+        }
+        doc.text(l, 14, y);
+        y += 6;
+      });
+
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text('Generated by Pincence Electric online service request app.', 14, 285);
+
+      const ab = doc.output('arraybuffer');
+      return new Blob([ab], { type: 'application/pdf' });
+    }
+
+    async function pdfToBase64(blob) {
+      return new Promise((resolve) => {
+        const fr = new FileReader();
+        fr.onload = () => resolve(fr.result.split(',')[1]);
+        fr.readAsDataURL(blob);
+      });
+    }
+
+    async function emailPdf() {
+      const phone = el('phone').value.trim();
+      if (!phone) {
+        alert('Please enter a phone number so we can reach you.');
+        return false;
+      }
+      if (!lineItems.length) {
+        alert('Add at least one service line before submitting your request.');
+        return false;
+      }
+      if (!WEBHOOK_URL || WEBHOOK_URL.includes("YOUR_WEBHOOK_EXEC_URL_HERE")) {
+        alert('This form is not fully configured yet. Please contact Pincence Electric directly.');
+        return false;
+      }
+
+      const pdfBlob = generatePdfBlob();
+      const pdf64 = await pdfToBase64(pdfBlob);
+      const photos = await filesToBase64(el('photos').files);
+      const summary = buildSummary();
+      const jobId = generateJobId();
+
+      const subject = `New Service Request – ${jobId}`;
+
+      const payload = {
+        to: OFFICE_EMAIL,
+        subject,
+        summary,
+        pdf: {
+          base64: pdf64,
+          filename: `${jobId.replace(/\s+/g, '_')}.pdf`
+        },
+        photos
+      };
+
+      try {
+        await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          mode: 'no-cors',
+          body: JSON.stringify(payload)
+        });
+
+        alert('Thank you! Your request has been sent to Pincence Electric. We’ll review it and get back to you.');
+        return true;
+      } catch (e) {
+        alert('There was a problem sending your request. Please try again or contact us directly at 603-303-0691.');
+        return false;
+      }
+    }
+
+    // ===== INIT & EVENT WIRING =====
+    populateCategorySelect();
+    populateServiceSelect();
+    renderServiceList();
+    recalcTotal();
+    updateJobIdDisplay();
+
+    el('catSelect').addEventListener('change', populateServiceSelect);
+    el('qty').addEventListener('input', () => {
+      const v = Number(el('qty').value || 1);
+      if (v < 1) el('qty').value = 1;
+    });
+    el('zip').addEventListener('input', recalcTotal);
+    el('jobTag').addEventListener('input', updateJobIdDisplay);
+    el('address').addEventListener('input', updateJobIdDisplay);
+    el('addLineBtn').addEventListener('click', addLineItem);
+    document.getElementById('submitBtn').addEventListener('click', () => emailPdf());
+  </script>
+</body>
+</html>
