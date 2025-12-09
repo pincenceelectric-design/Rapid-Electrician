@@ -53,25 +53,25 @@
       border: 3px solid rgba(248, 250, 252, 0.08);
     }
     .logo-wrap {
-  flex-shrink: 0;
-  width: 80px;           /* a bit bigger so the round logo reads clean */
-  height: 80px;
-  border-radius: 999px;
-  background: rgba(15, 23, 42, 0.95);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid rgba(248, 250, 252, 0.4);
-  overflow: hidden;
-}
+      flex-shrink: 0;
+      width: 80px;
+      height: 80px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.95);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid rgba(248, 250, 252, 0.4);
+      overflow: hidden;
+    }
 
-.logo-wrap img {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;   /* keep proportions, no cropping */
-  object-position: center;
-  display: block;
-}
+    .logo-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      object-position: center;
+      display: block;
+    }
     .header-text h1 {
       margin: 0;
       font-size: 20px;
@@ -262,21 +262,21 @@
   <div class="card">
     <div class="card-header">
       <div class="logo-wrap">
-  <img 
-    src="pincence_logo.png"
-    alt="Pincence Electric Logo"
-  />
-</div>
+        <img 
+          src="pincence_logo.png"
+          alt="Pincence Electric Logo"
+        />
+      </div>
       <div class="header-text">
         <h1>Pincence Electric</h1>
-        <p>Request Electrical Service & Ballpark Pricing</p>
+        <p>Request Electrical Service</p>
       </div>
     </div>
 
     <p class="help">
       Use this form to request service from Pincence Electric. Tell us about your project,
       pick the services you’re interested in, and we’ll review the request, confirm details,
-      and follow up with you directly.
+      and follow up with you directly with pricing.
     </p>
 
     <!-- Customer details -->
@@ -299,7 +299,7 @@
       <div>
         <label>ZIP code (for travel band)</label>
         <input id="zip" placeholder="e.g., 03826" />
-        <small class="note" id="zipNote">ZIP is required to calculate travel and show an estimated total.</small>
+        <small class="note" id="zipNote">ZIP helps us understand your travel band for scheduling and estimating.</small>
       </div>
     </div>
     <label>Service address</label>
@@ -349,11 +349,11 @@
     </div>
 
     <div class="total" id="totalBox">
-      <span>Estimated total (services + travel) – for budgeting only</span>
-      <span id="total">$0</span>
+      <span>Request summary – pricing will be confirmed by our office</span>
+      <span id="total">Pending</span>
     </div>
     <small class="note" id="travelInfo">
-      Enter your ZIP to calculate an estimated travel band and total.
+      Enter your ZIP so we can understand your travel band and build an accurate estimate.
     </small>
 
     <h2 class="section-title">Notes for Our Team</h2>
@@ -540,11 +540,8 @@
       Object.entries(CATALOG[catKey].services).forEach(([sk, svc]) => {
         const opt = document.createElement('option');
         opt.value = sk;
-        let label = svc.name;
-        if (svc.price === null) label += ' — TBD / consult';
-        else if (svc.hourly) label += ` — ${svc.unit || 'hour'} @ $${RATE_HOURLY}/hr`;
-        else label += ` — $${svc.price} per ${svc.unit || 'job'}`;
-        opt.textContent = label;
+        // Hide all pricing from the dropdown labels:
+        opt.textContent = svc.name;
         svcSel.appendChild(opt);
       });
     }
@@ -617,7 +614,7 @@
           <th>Service</th>
           <th>Qty</th>
           <th>Unit</th>
-          <th>Line total</th>
+          <th>Line status</th>
           <th></th>
         </tr>`;
       table.appendChild(thead);
@@ -655,12 +652,13 @@
         unitTd.textContent = svc.unit || (svc.hourly ? 'hour' : 'job');
 
         const totalTd = document.createElement('td');
+        // Do NOT show any dollar amounts here – only status text for the customer.
+        totalTd.style.color = '#64748b';
+        totalTd.style.fontStyle = 'italic';
         if (isNaN(item.lineTotal)) {
-          totalTd.textContent = 'TBD';
-          totalTd.style.color = '#64748b';
-          totalTd.style.fontStyle = 'italic';
+          totalTd.textContent = 'TBD – will be quoted';
         } else {
-          totalTd.textContent = '$' + (Math.round(item.lineTotal * 100) / 100).toLocaleString();
+          totalTd.textContent = 'Pending office review';
         }
 
         const actionTd = document.createElement('td');
@@ -703,23 +701,22 @@
       });
 
       if (!lineItems.length) {
-        el('total').textContent = '$0';
+        el('total').textContent = 'No services added';
         totalBox.classList.remove('missing-zip');
-        travelInfo.textContent = 'Enter your ZIP to calculate an estimated travel band and total.';
+        travelInfo.textContent = 'Enter your ZIP so we can understand your travel band and build an accurate estimate.';
         return;
       }
+
+      // We STILL compute travel & subtotal internally for the PDF,
+      // but we DO NOT display any pricing to the customer.
+      el('total').textContent = 'Pending office review';
+      totalBox.classList.remove('missing-zip');
 
       if (!zip || isNaN(travelFee)) {
-        el('total').textContent = 'ZIP required';
-        totalBox.classList.add('missing-zip');
-        travelInfo.textContent = 'ZIP missing or outside our standard radius – final pricing will be confirmed by our office.';
-        return;
+        travelInfo.textContent = 'ZIP missing or outside our standard radius – travel and pricing will be confirmed by our office.';
+      } else {
+        travelInfo.textContent = 'Travel band: ' + travelBandLabel(travelFee) + ' • Final travel charge will be confirmed by our office.';
       }
-
-      totalBox.classList.remove('missing-zip');
-      const total = subTotal + travelFee;
-      el('total').textContent = '$' + (Math.round(total * 100) / 100).toLocaleString();
-      travelInfo.textContent = 'Travel band: ' + travelBandLabel(travelFee) + ` • Travel portion included in total: $${travelFee}`;
     }
 
     function generateJobId() {
@@ -899,7 +896,7 @@
           body: JSON.stringify(payload)
         });
 
-        alert('Thank you! Your request has been sent to Pincence Electric. We’ll review it and get back to you.');
+        alert('Thank you! Your request has been sent to Pincence Electric. We’ll review it and get back to you with pricing.');
         return true;
       } catch (e) {
         alert('There was a problem sending your request. Please try again or contact us directly at 603-303-0691.');
