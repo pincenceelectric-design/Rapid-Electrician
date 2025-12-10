@@ -1,0 +1,21 @@
+{
+  "name": "Pincence Electric – Service Request",
+  "short_name": "Pincence Electric",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#1d4ed8",
+  "icons": [
+    {
+      "src": "pincence_logo_192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "pincence_logo_512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
