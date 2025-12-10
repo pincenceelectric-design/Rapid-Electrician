@@ -1,21 +1,24 @@
 {
   "name": "Pincence Electric – Service Request",
   "short_name": "Pincence Electric",
-  "start_url": "./",
+  "description": "Request electrical service, pricing estimates, and submit project details to Pincence Electric.",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#020617",
+  "background_color": "#ffffff",
   "theme_color": "#1d4ed8",
   "icons": [
     {
       "src": "pincence_logo_192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "pincence_logo_512.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
