@@ -6,10 +6,10 @@
   <title>Pincence Electric – Service Request</title>
 
   <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="pincence_logo_512.png">
-<meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="default">
-<meta name="apple-mobile-web-app-title" content="Pincence Electric">
+  <link rel="apple-touch-icon" href="pincence_logo_512.png">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Pincence Electric">
 
   <style>
     :root {
@@ -19,9 +19,8 @@
       --pe-gray: #e5e7eb;
       --pe-accent-red: #ef4444;
     }
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
+
     body {
       font-family: Arial, sans-serif;
       background: radial-gradient(circle at top, var(--pe-blue) 0, var(--pe-bg) 60%);
@@ -71,7 +70,6 @@
       border: 2px solid rgba(248, 250, 252, 0.4);
       overflow: hidden;
     }
-
     .logo-wrap img {
       width: 100%;
       height: 100%;
@@ -95,6 +93,7 @@
       font-size: 12px;
       color: #475569;
     }
+
     h2.section-title {
       margin: 8px 0 4px;
       font-size: 13px;
@@ -131,25 +130,13 @@
       grid-template-columns: repeat(2, minmax(0, 1fr));
       gap: 10px;
     }
-    .add-row {
-      display: grid;
-      grid-template-columns: 1.3fr 2fr 0.6fr 0.9fr 0.9fr;
-      gap: 8px;
-      align-items: end;
-      margin-top: 4px;
-    }
-    .add-row select {
-      font-size: 12px;
-    }
-    .add-row button {
-      margin-top: 0;
-      width: 100%;
-    }
+
     .small-label {
       font-size: 11px;
       font-weight: 500;
       color: #64748b;
     }
+
     .service-list {
       margin-top: 10px;
       border-radius: 12px;
@@ -205,6 +192,7 @@
       background: #e5e7eb;
       color: #4b5563;
     }
+
     .total {
       margin-top: 12px;
       display: flex;
@@ -228,9 +216,8 @@
       background: #7f1d1d;
       color: #fee2e2;
     }
-    .total.missing-zip span:first-child {
-      opacity: 1;
-    }
+    .total.missing-zip span:first-child { opacity: 1; }
+
     .actions {
       display: flex;
       flex-wrap: wrap;
@@ -248,9 +235,8 @@
       color: #e5e7eb;
       box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
     }
-    button:hover {
-      background: #2563eb;
-    }
+    button:hover { background: #2563eb; }
+
     .footer-bar {
       margin-top: 16px;
       font-size: 11px;
@@ -263,16 +249,233 @@
       font-size: 11px;
       color: #64748b;
     }
+
+    /* ===== Mobile-first service picker ===== */
+    .cat-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin-top: 8px;
+    }
+    @media (max-width: 560px) {
+      .cat-grid { grid-template-columns: 1fr; }
+      .row { grid-template-columns: 1fr; }
+      body { padding: 14px; }
+      .card { padding: 0 16px 20px; }
+      .card-header { margin: -1px -16px 14px; padding: 14px 16px 16px; }
+    }
+    .cat-btn {
+      min-height: 52px;
+      border-radius: 14px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      color: #0f172a;
+      font-weight: 800;
+      font-size: 13px;
+      letter-spacing: 0.02em;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 12px;
+      cursor: pointer;
+      transition: transform 0.06s ease, border-color 0.15s ease, background 0.15s ease;
+      box-shadow: none;
+    }
+    .cat-btn:hover { background: #eff6ff; border-color: #93c5fd; }
+    .cat-btn:active { transform: translateY(1px); }
+    .cat-btn .chev { opacity: 0.55; font-weight: 900; }
+    .cat-btn.active {
+      border-color: #60a5fa;
+      outline: 2px solid rgba(59, 130, 246, 0.25);
+      background: #dbeafe;
+    }
+
+    .svc-panel {
+      margin-top: 10px;
+      border-radius: 16px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      overflow: hidden;
+    }
+    .svc-panel-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 12px;
+      background: #f1f5f9;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    .svc-panel-title {
+      font-size: 13px;
+      font-weight: 900;
+      color: #0f172a;
+      letter-spacing: 0.02em;
+    }
+    .svc-panel-sub {
+      margin-top: 2px;
+      font-size: 11px;
+      color: #64748b;
+    }
+    .svc-panel-actions { display: flex; gap: 8px; align-items: center; }
+
+    .ghost-btn {
+      border: 1px solid rgba(148, 163, 184, 0.85);
+      background: #ffffff;
+      color: #0f172a;
+      box-shadow: none;
+      padding: 8px 12px;
+      font-size: 12px;
+      border-radius: 999px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .ghost-btn:hover { background: #f8fafc; }
+
+    .svc-list { display: grid; grid-template-columns: 1fr; }
+    .svc-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 12px 12px;
+      border-bottom: 1px solid #eef2f7;
+      align-items: center;
+    }
+    .svc-item:last-child { border-bottom: none; }
+    .svc-name {
+      font-size: 13px;
+      font-weight: 800;
+      color: #0f172a;
+      line-height: 1.25;
+    }
+    .svc-meta {
+      margin-top: 2px;
+      font-size: 11px;
+      color: #64748b;
+    }
+    .svc-add {
+      min-width: 112px;
+      min-height: 44px;
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 900;
+      cursor: pointer;
+      border: none;
+    }
+
+    /* Bottom sheet */
+    .sheet-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.55);
+      z-index: 50;
+    }
+    .sheet {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 60;
+      background: #ffffff;
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      box-shadow: 0 -18px 45px rgba(15, 23, 42, 0.35);
+      max-height: 78vh;
+      overflow: auto;
+    }
+    .sheet-handle {
+      width: 46px;
+      height: 5px;
+      border-radius: 999px;
+      background: #cbd5e1;
+      margin: 10px auto 6px;
+    }
+    .sheet-content { padding: 12px 14px 16px; }
+    .sheet-title { font-size: 14px; font-weight: 900; color: #0f172a; }
+    .sheet-service { margin-top: 2px; font-size: 12px; color: #475569; font-weight: 700; }
+
+    .sheet-row {
+      margin-top: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 10px;
+      border-radius: 14px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+    }
+    .sheet-label { font-size: 12px; font-weight: 800; color: #0f172a; }
+    .qty-ctrl { display: inline-flex; align-items: center; gap: 8px; }
+    .qty-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 999px;
+      border: 1px solid #cbd5e1;
+      background: #ffffff;
+      font-weight: 900;
+      font-size: 18px;
+      cursor: pointer;
+      box-shadow: none;
+      color: #0f172a;
+      padding: 0;
+    }
+    .qty-input {
+      width: 88px;
+      text-align: center;
+      padding: 8px 10px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    .toggle { display: flex; align-items: center; gap: 10px; }
+    .toggle input { width: 18px; height: 18px; }
+    .toggle label { margin: 0; font-size: 12px; font-weight: 800; color: #0f172a; }
+
+    .sheet-actions {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+    .sheet-actions button { width: 100%; }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      left: 50%;
+      transform: translateX(-50%);
+      bottom: 16px;
+      z-index: 80;
+      background: rgba(15, 23, 42, 0.95);
+      color: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 14px;
+      font-size: 12px;
+      font-weight: 800;
+      box-shadow: 0 18px 40px rgba(2, 6, 23, 0.45);
+      max-width: min(560px, calc(100vw - 24px));
+      text-align: center;
+    }
+
+    /* Cart highlight */
+    .flash { animation: flash 0.7s ease; }
+    @keyframes flash {
+      0% { box-shadow: 0 0 0 rgba(59,130,246,0); }
+      30% { box-shadow: 0 0 0 6px rgba(59,130,246,0.25); }
+      100% { box-shadow: 0 0 0 rgba(59,130,246,0); }
+    }
   </style>
 </head>
+
 <body>
   <div class="card">
     <div class="card-header">
       <div class="logo-wrap">
-        <img 
-          src="pincence_logo.png"
-          alt="Pincence Electric Logo"
-        />
+        <img src="pincence_logo.png" alt="Pincence Electric Logo" />
       </div>
       <div class="header-text">
         <h1>Pincence Electric</h1>
@@ -325,34 +528,24 @@
       You can attach a few photos of the panel, area of work, or existing conditions (up to 5).
     </small>
 
-    <label class="small-label" style="margin-top:10px;">Add line items to your request</label>
-    <div class="add-row">
-      <div>
-        <label class="small-label">Category</label>
-        <select id="catSelect"></select>
+    <label class="small-label" style="margin-top:12px;">Tap a category, then tap services to add them</label>
+    <div class="cat-grid" id="catGrid"></div>
+
+    <div class="svc-panel" id="svcPanel" aria-live="polite">
+      <div class="svc-panel-header">
+        <div>
+          <div class="svc-panel-title" id="svcPanelTitle">Select a category</div>
+          <div class="svc-panel-sub" id="svcPanelSub">Then choose services below to add them to your request.</div>
+        </div>
+        <div class="svc-panel-actions">
+          <button class="ghost-btn" id="viewCartBtn" type="button">View request</button>
+        </div>
       </div>
-      <div>
-        <label class="small-label">Service</label>
-        <select id="svcSelect"></select>
-      </div>
-      <div>
-        <label class="small-label">Qty / Sq Ft / Hours</label>
-        <input id="qty" type="number" min="1" step="1" value="1" />
-      </div>
-      <div>
-        <label class="small-label">Emergency rate?</label>
-        <select id="lineEmergency">
-          <option value="no">No</option>
-          <option value="yes">Yes</option>
-        </select>
-      </div>
-      <div>
-        <button id="addLineBtn">Add to list</button>
-      </div>
+      <div class="svc-list" id="svcList"></div>
     </div>
 
     <div class="service-list" id="serviceList">
-      <div class="service-list-empty">No services added yet. Select a category and service, set quantity, and click “Add to list”.</div>
+      <div class="service-list-empty">No services added yet. Choose a category above and tap “Add”.</div>
     </div>
 
     <div class="total" id="totalBox">
@@ -367,13 +560,52 @@
     <textarea id="notes" placeholder="Tell us about access, preferred schedule, existing issues, or anything else we should know."></textarea>
 
     <div class="actions">
-      <button id="submitBtn">Submit Service Request</button>
+      <button id="submitBtn" type="button">Submit Service Request</button>
     </div>
 
     <div class="footer-bar">
       Pincence Electric • Licensed in NH / MA / ME • 603-303-0691 • Pincence.Electric@gmail.com
     </div>
   </div>
+
+  <!-- Mobile add-to-request sheet -->
+  <div class="sheet-backdrop" id="sheetBackdrop" hidden></div>
+  <div class="sheet" id="qtySheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+    <div class="sheet-handle"></div>
+    <div class="sheet-content">
+      <div class="sheet-title" id="sheetTitle">Add Service</div>
+      <div class="sheet-service" id="sheetServiceName">—</div>
+
+      <div class="sheet-row">
+        <div class="sheet-label">Quantity</div>
+        <div class="qty-ctrl">
+          <button class="qty-btn" id="qtyMinus" type="button" aria-label="Decrease quantity">−</button>
+          <input class="qty-input" id="sheetQty" type="number" min="1" step="1" value="1" inputmode="numeric" />
+          <button class="qty-btn" id="qtyPlus" type="button" aria-label="Increase quantity">+</button>
+        </div>
+      </div>
+
+      <div class="sheet-row">
+        <div class="sheet-label">Emergency / after-hours?</div>
+        <div class="toggle">
+          <input type="checkbox" id="sheetEmergency" />
+          <label for="sheetEmergency">Add emergency rate</label>
+        </div>
+      </div>
+
+      <div class="sheet-actions">
+        <button class="ghost-btn" id="sheetCancel" type="button">Cancel</button>
+        <button id="sheetAdd" type="button">Add to request</button>
+      </div>
+
+      <small class="note" style="margin-top:8px;">
+        Note: “TBD” items will be reviewed and confirmed by our office.
+      </small>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
 
   <!-- jsPDF CDN -->
   <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
@@ -385,6 +617,7 @@
     const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbxHVjBULjbH4uPQX3qPsvEEI9v80eRbkPvDGEQVKJwC7X4IECmO400M5IP07-y6BwnOSg/exec";
 
     const RATE_HOURLY = 150;
+
     const CATALOG = {
       lighting: {
         label: 'Devices & Lighting',
@@ -524,75 +757,148 @@
       return 'Outside standard travel radius (TBD)';
     }
 
-    function populateCategorySelect() {
-      const catSel = el('catSelect');
-      catSel.innerHTML = '';
+    // ===== Mobile-first picker state =====
+    let selectedCatKey = null;
+    let pendingAdd = null; // {catKey, svcKey}
+
+    function showToast(msg) {
+      const t = el('toast');
+      t.textContent = msg;
+      t.hidden = false;
+      clearTimeout(showToast._tm);
+      showToast._tm = setTimeout(() => { t.hidden = true; }, 1800);
+    }
+
+    function flashCart() {
+      const box = el('serviceList');
+      box.classList.remove('flash');
+      void box.offsetWidth;
+      box.classList.add('flash');
+    }
+
+    function unitLabel(svc) {
+      if (svc.hourly) return 'hour';
+      return (svc.unit || 'job');
+    }
+
+    function serviceMetaText(svc) {
+      if (svc.price === null) return 'Specialty item – requires consult (TBD)';
+      if (svc.hourly) return 'Billed hourly (office confirmed)';
+      if ((svc.unit || '').toLowerCase() === 'sqft') return 'Measured by square footage (office confirmed)';
+      return `Unit: ${unitLabel(svc)}`;
+    }
+
+    function renderCategoryButtons() {
+      const grid = el('catGrid');
+      grid.innerHTML = '';
+
       Object.entries(CATALOG).forEach(([key, cat]) => {
-        const opt = document.createElement('option');
-        opt.value = key;
-        opt.textContent = cat.label;
-        catSel.appendChild(opt);
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'cat-btn' + (selectedCatKey === key ? ' active' : '');
+        btn.innerHTML = `<span>${cat.label}</span><span class="chev">›</span>`;
+        btn.addEventListener('click', () => {
+          selectedCatKey = key;
+          renderCategoryButtons();
+          renderServicePanel();
+          el('svcPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+        grid.appendChild(btn);
       });
     }
 
-    function populateServiceSelect() {
-      const catKey = el('catSelect').value;
-      const svcSel = el('svcSelect');
-      svcSel.innerHTML = '';
-      if (!catKey || !CATALOG[catKey]) return;
-      const placeholder = document.createElement('option');
-      placeholder.value = '';
-      placeholder.textContent = 'Select a service…';
-      svcSel.appendChild(placeholder);
-      Object.entries(CATALOG[catKey].services).forEach(([sk, svc]) => {
-        const opt = document.createElement('option');
-        opt.value = sk;
-        // Hide all pricing from the dropdown labels:
-        opt.textContent = svc.name;
-        svcSel.appendChild(opt);
-      });
-    }
+    function renderServicePanel() {
+      const title = el('svcPanelTitle');
+      const sub = el('svcPanelSub');
+      const list = el('svcList');
+      list.innerHTML = '';
 
-    function addLineItem() {
-      const catKey = el('catSelect').value;
-      const svcKey = el('svcSelect').value;
-      const qtyVal = Number(el('qty').value || 1);
-      const emerg = el('lineEmergency').value === 'yes';
-
-      if (!catKey || !svcKey || !CATALOG[catKey] || !CATALOG[catKey].services[svcKey]) {
-        alert('Select a category and service before adding.');
+      if (!selectedCatKey || !CATALOG[selectedCatKey]) {
+        title.textContent = 'Select a category';
+        sub.textContent = 'Then choose services below to add them to your request.';
+        list.innerHTML = `<div class="service-list-empty" style="padding:12px;">Pick a category above to browse services.</div>`;
         return;
       }
-      if (qtyVal <= 0 || isNaN(qtyVal)) {
-        alert('Quantity must be at least 1.');
+
+      const cat = CATALOG[selectedCatKey];
+      title.textContent = cat.label;
+      sub.textContent = 'Tap “Add” to include services in your request (you can remove them later).';
+
+      Object.entries(cat.services).forEach(([svcKey, svc]) => {
+        const row = document.createElement('div');
+        row.className = 'svc-item';
+
+        const left = document.createElement('div');
+        left.innerHTML = `
+          <div class="svc-name">${svc.name}</div>
+          <div class="svc-meta">${serviceMetaText(svc)}</div>
+          ${svc.price === null ? `<div style="margin-top:6px;"><span class="chip tbd">TBD</span></div>` : ``}
+        `;
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'svc-add';
+        btn.textContent = '＋ Add';
+        btn.addEventListener('click', () => openQtySheet(selectedCatKey, svcKey));
+
+        row.appendChild(left);
+        row.appendChild(btn);
+        list.appendChild(row);
+      });
+    }
+
+    function openQtySheet(catKey, svcKey) {
+      pendingAdd = { catKey, svcKey };
+      const cat = CATALOG[catKey];
+      const svc = cat.services[svcKey];
+
+      el('sheetServiceName').textContent = `[${cat.label}] ${svc.name}`;
+      el('sheetQty').value = 1;
+      el('sheetEmergency').checked = false;
+
+      el('sheetBackdrop').hidden = false;
+      el('qtySheet').hidden = false;
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeQtySheet() {
+      el('sheetBackdrop').hidden = true;
+      el('qtySheet').hidden = true;
+      document.body.style.overflow = '';
+      pendingAdd = null;
+    }
+
+    function addLineItemDirect(catKey, svcKey, qtyVal, emerg) {
+      if (!catKey || !svcKey || !CATALOG[catKey] || !CATALOG[catKey].services[svcKey]) {
+        alert('Select a valid service.');
         return;
       }
 
       const svc = CATALOG[catKey].services[svcKey];
+      const qty = Math.max(1, Number(qtyVal || 1));
+      const isEmerg = !!emerg;
+
       let unitPrice = svc.price;
       let lineTotal = NaN;
 
       if (svc.hourly) {
         unitPrice = RATE_HOURLY;
-        lineTotal = Math.max(1, qtyVal) * RATE_HOURLY * (emerg ? 1.5 : 1);
+        lineTotal = qty * RATE_HOURLY * (isEmerg ? 1.5 : 1);
       } else if (svc.price === null) {
         unitPrice = null;
         lineTotal = NaN;
       } else {
-        lineTotal = Math.max(1, qtyVal) * svc.price;
+        lineTotal = qty * svc.price;
       }
 
-      lineItems.push({
-        catKey,
-        svcKey,
-        qty: Math.max(1, qtyVal),
-        emerg,
-        unitPrice,
-        lineTotal
-      });
+      lineItems.push({ catKey, svcKey, qty, emerg: isEmerg, unitPrice, lineTotal });
 
       renderServiceList();
       recalcTotal();
+      flashCart();
+
+      const label = svc.name + (qty > 1 ? ` (Qty ${qty})` : '');
+      showToast(`Added: ${label}`);
     }
 
     function removeLineItem(index) {
@@ -607,7 +913,7 @@
       if (!lineItems.length) {
         const div = document.createElement('div');
         div.className = 'service-list-empty';
-        div.textContent = 'No services added yet. Select a category and service, set quantity, and click “Add to list”.';
+        div.textContent = 'No services added yet. Choose a category above and tap “Add”.';
         container.appendChild(div);
         return;
       }
@@ -637,6 +943,7 @@
 
         const svcTd = document.createElement('td');
         svcTd.textContent = svc.name;
+
         if (item.emerg) {
           const chip = document.createElement('span');
           chip.className = 'chip emergency';
@@ -659,7 +966,6 @@
         unitTd.textContent = svc.unit || (svc.hourly ? 'hour' : 'job');
 
         const totalTd = document.createElement('td');
-        // Do NOT show any dollar amounts here – only status text for the customer.
         totalTd.style.color = '#64748b';
         totalTd.style.fontStyle = 'italic';
         if (isNaN(item.lineTotal)) {
@@ -671,6 +977,7 @@
         const actionTd = document.createElement('td');
         actionTd.style.textAlign = 'right';
         const btn = document.createElement('button');
+        btn.type = 'button';
         btn.style.boxShadow = 'none';
         btn.style.background = '#fee2e2';
         btn.style.color = '#b91c1c';
@@ -911,23 +1218,51 @@
       }
     }
 
+    function scrollToCart() {
+      el('serviceList').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
     // ===== INIT & EVENT WIRING =====
-    populateCategorySelect();
-    populateServiceSelect();
+    renderCategoryButtons();
+    renderServicePanel();
     renderServiceList();
     recalcTotal();
     updateJobIdDisplay();
 
-    el('catSelect').addEventListener('change', populateServiceSelect);
-    el('qty').addEventListener('input', () => {
-      const v = Number(el('qty').value || 1);
-      if (v < 1) el('qty').value = 1;
-    });
     el('zip').addEventListener('input', recalcTotal);
     el('jobTag').addEventListener('input', updateJobIdDisplay);
     el('address').addEventListener('input', updateJobIdDisplay);
-    el('addLineBtn').addEventListener('click', addLineItem);
-    document.getElementById('submitBtn').addEventListener('click', () => emailPdf());
+    el('submitBtn').addEventListener('click', () => emailPdf());
+
+    // Sheet controls
+    el('sheetBackdrop').addEventListener('click', closeQtySheet);
+    el('sheetCancel').addEventListener('click', closeQtySheet);
+
+    el('qtyMinus').addEventListener('click', () => {
+      const v = Math.max(1, Number(el('sheetQty').value || 1) - 1);
+      el('sheetQty').value = v;
+    });
+    el('qtyPlus').addEventListener('click', () => {
+      const v = Math.max(1, Number(el('sheetQty').value || 1) + 1);
+      el('sheetQty').value = v;
+    });
+    el('sheetQty').addEventListener('input', () => {
+      const v = Number(el('sheetQty').value || 1);
+      if (!v || v < 1) el('sheetQty').value = 1;
+    });
+
+    el('sheetAdd').addEventListener('click', () => {
+      if (!pendingAdd) return;
+      addLineItemDirect(
+        pendingAdd.catKey,
+        pendingAdd.svcKey,
+        el('sheetQty').value,
+        el('sheetEmergency').checked
+      );
+      closeQtySheet();
+    });
+
+    el('viewCartBtn').addEventListener('click', scrollToCart);
   </script>
 </body>
 </html>
